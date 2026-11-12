@@ -84,6 +84,9 @@ const Incidents = {
   }
 };
 
+// Explicitly attach to window for cross-file accessibility
+window.Incidents = Incidents;
+
 document.addEventListener("DOMContentLoaded", () => {
   Incidents.init();
 });

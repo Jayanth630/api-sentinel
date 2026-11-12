@@ -347,6 +347,9 @@ const App = {
         btnSeed.disabled = false;
         btnSeed.innerHTML = `<span>Load 5 Demo Test APIs</span>`;
         App.showToast("Demo APIs Loaded", `Successfully seeded ${createdCount} realistic test endpoints.`, "success");
+        if (window.Analytics && Analytics.populateEndpointDropdown) {
+          Analytics.populateEndpointDropdown();
+        }
         App.switchView("dashboard");
       });
     }
@@ -465,6 +468,9 @@ const App = {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 };
+
+// Explicitly attach to window for cross-file accessibility
+window.App = App;
 
 document.addEventListener("DOMContentLoaded", () => {
   App.init();

@@ -467,6 +467,9 @@ const Endpoints = {
         this.closeModal();
         App.showToast("Success", json.message || "Endpoint saved.", "success");
         this.loadData();
+        if (window.Analytics && Analytics.populateEndpointDropdown) {
+          Analytics.populateEndpointDropdown();
+        }
       } else {
         App.showToast("Validation Error", json.error || "Could not save endpoint.", "error");
       }
@@ -518,6 +521,9 @@ const Endpoints = {
         this.closeDeleteModal();
         App.showToast("Deleted", json.message, "info");
         this.loadData();
+        if (window.Analytics && Analytics.populateEndpointDropdown) {
+          Analytics.populateEndpointDropdown();
+        }
       } else {
         App.showToast("Error", json.error || "Failed to delete endpoint", "error");
       }
@@ -531,6 +537,9 @@ const Endpoints = {
     }
   }
 };
+
+// Explicitly attach to window for cross-file accessibility
+window.Endpoints = Endpoints;
 
 document.addEventListener("DOMContentLoaded", () => {
   Endpoints.init();

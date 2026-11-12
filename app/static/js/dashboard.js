@@ -254,6 +254,9 @@ const Dashboard = {
   }
 };
 
+// Explicitly attach to window for cross-file accessibility
+window.Dashboard = Dashboard;
+
 document.addEventListener("DOMContentLoaded", () => {
   const refreshBtn = document.getElementById("btnRefreshFeed");
   if (refreshBtn) {

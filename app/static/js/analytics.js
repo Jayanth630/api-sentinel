@@ -6,9 +6,12 @@ const Analytics = {
   currentEndpointId: null,
   currentTimeframeHours: 24,
   historyChart: null,
+  isLoading: false,
 
   init() {
     this.initEvents();
+    // Pre-populate dropdown on page load so it is immediately ready
+    this.populateEndpointDropdown();
   },
 
   initEvents() {
@@ -20,7 +23,7 @@ const Analytics = {
       });
     }
 
-    // Timeframe buttons
+    // Timeframe buttons (1h, 24h, 7d, 30d)
     const timeframeBtns = document.querySelectorAll("#viewAnalytics [data-hours]");
     timeframeBtns.forEach(btn => {
       btn.addEventListener("click", () => {
@@ -43,39 +46,55 @@ const Analytics = {
     if (!sel) return;
 
     try {
+      // Indicate loading state if dropdown is currently unpopulated
+      if (sel.options.length <= 1 && (!sel.value || sel.value === "")) {
+        sel.disabled = true;
+        sel.innerHTML = `<option value="">Loading endpoints...</option>`;
+      }
+
       const res = await fetch("/api/endpoints");
       const json = await res.json();
-      if (!json.success) return;
+      sel.disabled = false;
 
-      const endpoints = json.data;
-      if (!endpoints.length) {
-        sel.innerHTML = `<option value="">No endpoints configured</option>`;
-        this.currentEndpointId = null;
+      if (!json.success) {
+        sel.innerHTML = `<option value="">Failed to load endpoints</option>`;
         return;
       }
 
-      // Check if options changed to prevent tearing down active user interaction
+      const endpoints = json.data || [];
+      if (!endpoints.length) {
+        sel.innerHTML = `<option value="">No endpoints configured</option>`;
+        this.currentEndpointId = null;
+        this.showEmptyState();
+        return;
+      }
+
+      // Format: Name [METHOD] – URL
       const currentIds = Array.from(sel.options).map(o => o.value).filter(Boolean).join(",");
       const newIds = endpoints.map(e => String(e.id)).join(",");
 
-      if (currentIds !== newIds || sel.options.length === 0) {
-        sel.innerHTML = endpoints.map(ep => `
-          <option value="${ep.id}" ${this.currentEndpointId === ep.id ? "selected" : ""}>
-            ${ep.name} (${ep.method} - ${ep.url})
-          </option>
-        `).join("");
+      // If current selected ID is invalid, pick the first endpoint
+      const currentExists = endpoints.some(e => e.id === this.currentEndpointId);
+      if (!currentExists && endpoints.length > 0) {
+        this.currentEndpointId = endpoints[0].id;
       }
 
-      // If no endpoint is selected, select the first one
-      if (!this.currentEndpointId && endpoints.length > 0) {
-        this.currentEndpointId = endpoints[0].id;
+      // Re-render options if changed or empty
+      if (currentIds !== newIds || sel.options.length <= 1) {
+        sel.innerHTML = endpoints.map(ep => `
+          <option value="${ep.id}" ${this.currentEndpointId === ep.id ? "selected" : ""}>
+            ${ep.name} [${(ep.method || "GET").toUpperCase()}] &ndash; ${ep.url}
+          </option>
+        `).join("");
       }
 
       if (this.currentEndpointId) {
         sel.value = this.currentEndpointId;
       }
     } catch (err) {
+      sel.disabled = false;
       console.error("Error populating endpoint selector:", err);
+      sel.innerHTML = `<option value="">Error connecting to server</option>`;
     }
   },
 
@@ -87,34 +106,97 @@ const Analytics = {
   },
 
   async loadEndpointAnalytics() {
-    if (!this.currentEndpointId) return;
+    if (!this.currentEndpointId) {
+      this.showEmptyState();
+      return;
+    }
+
+    const subtitleEl = document.getElementById("anaChartSubtitle");
+    if (subtitleEl) {
+      subtitleEl.innerHTML = `<span class="spinner" style="display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:middle;"></span> Loading endpoint analytics...`;
+    }
 
     try {
+      this.isLoading = true;
       const res = await fetch(`/api/analytics/endpoint/${this.currentEndpointId}?hours=${this.currentTimeframeHours}`);
       const json = await res.json();
-      if (!json.success) return;
+      this.isLoading = false;
+
+      if (!json.success) {
+        if (subtitleEl) {
+          subtitleEl.textContent = json.error || "Failed to load telemetry for this endpoint.";
+        }
+        if (window.App && App.showToast) {
+          App.showToast("Analytics Error", json.error || "Could not load endpoint telemetry.", "error");
+        }
+        return;
+      }
 
       const d = json.data;
       this.updateAnalyticsKpis(d);
       this.renderHistoryChart(d);
     } catch (err) {
+      this.isLoading = false;
       console.error("Failed to load endpoint analytics:", err);
+      if (subtitleEl) {
+        subtitleEl.textContent = "Network error while loading analytics telemetry.";
+      }
+    }
+  },
+
+  showEmptyState() {
+    this.updateAnalyticsKpis({
+      uptime_percentage: 100.0,
+      successful_checks: 0,
+      total_checks: 0,
+      avg_latency_ms: 0,
+      min_latency_ms: 0,
+      max_latency_ms: 0,
+      p95_latency_ms: 0,
+      failed_checks: 0,
+      endpoint: null,
+      timeframe_hours: this.currentTimeframeHours
+    });
+
+    const subtitleEl = document.getElementById("anaChartSubtitle");
+    if (subtitleEl) {
+      subtitleEl.textContent = "No endpoint selected or configured. Add an endpoint to view latency recordings.";
+    }
+
+    if (this.historyChart) {
+      this.historyChart.data.labels = ["No data available"];
+      this.historyChart.data.datasets[0].data = [0];
+      this.historyChart.update();
     }
   },
 
   updateAnalyticsKpis(d) {
-    document.getElementById("anaUptime").textContent = `${(d.uptime_percentage !== undefined ? d.uptime_percentage : 100).toFixed(1)}%`;
-    document.getElementById("anaSuccessfulChecks").textContent = d.successful_checks;
-    document.getElementById("anaTotalChecks").textContent = d.total_checks;
-    document.getElementById("anaAvgLatency").textContent = d.avg_latency_ms;
-    document.getElementById("anaMinLatency").textContent = d.min_latency_ms;
-    document.getElementById("anaMaxLatency").textContent = d.max_latency_ms;
-    document.getElementById("anaP95Latency").textContent = d.p95_latency_ms;
-    document.getElementById("anaFailures").textContent = d.failed_checks;
+    const elUptime = document.getElementById("anaUptime");
+    const elSuccess = document.getElementById("anaSuccessfulChecks");
+    const elTotal = document.getElementById("anaTotalChecks");
+    const elAvg = document.getElementById("anaAvgLatency");
+    const elMin = document.getElementById("anaMinLatency");
+    const elMax = document.getElementById("anaMaxLatency");
+    const elP95 = document.getElementById("anaP95Latency");
+    const elFailures = document.getElementById("anaFailures");
+
+    if (elUptime) elUptime.textContent = `${(d.uptime_percentage !== undefined ? d.uptime_percentage : 100).toFixed(1)}%`;
+    if (elSuccess) elSuccess.textContent = d.successful_checks ?? 0;
+    if (elTotal) elTotal.textContent = d.total_checks ?? 0;
+    if (elAvg) elAvg.textContent = d.avg_latency_ms ?? 0;
+    if (elMin) elMin.textContent = d.min_latency_ms ?? 0;
+    if (elMax) elMax.textContent = d.max_latency_ms ?? 0;
+    if (elP95) elP95.textContent = d.p95_latency_ms ?? 0;
+    if (elFailures) elFailures.textContent = d.failed_checks ?? 0;
 
     const subtitleEl = document.getElementById("anaChartSubtitle");
-    if (subtitleEl && d.endpoint) {
-      subtitleEl.textContent = `${d.endpoint.name} (${d.endpoint.method} ${d.endpoint.url}) - Last ${d.timeframe_hours} hours`;
+    if (subtitleEl) {
+      if (d.endpoint) {
+        const probeCount = d.total_checks || 0;
+        subtitleEl.textContent = `${d.endpoint.name} (${d.endpoint.method} ${d.endpoint.url}) \u2014 Last ${d.timeframe_hours} hours (${probeCount} probe${probeCount === 1 ? '' : 's'} recorded)`;
+      } else {
+        subtitleEl.textContent = "Real-time latency recordings for selected API";
+      }
     }
   },
 
@@ -141,7 +223,7 @@ const Analytics = {
     const dataPoints = (d.history || []).map(h => h.latency_ms);
     const pointColors = (d.history || []).map(h => h.is_success ? "#6366f1" : "#ef4444");
 
-    const displayLabels = labels.length ? labels : ["No data yet"];
+    const displayLabels = labels.length ? labels : ["No data in timeframe"];
     const displayData = dataPoints.length ? dataPoints : [0];
 
     if (this.historyChart) {
@@ -214,7 +296,7 @@ const Analytics = {
       if (!json.success) return;
 
       const endpoints = json.data;
-      if (!endpoints.length) {
+      if (!endpoints || !endpoints.length) {
         tbody.innerHTML = `
           <tr>
             <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
@@ -262,6 +344,9 @@ const Analytics = {
     this.loadEndpointAnalytics();
   }
 };
+
+// Explicitly attach to window for cross-file accessibility
+window.Analytics = Analytics;
 
 document.addEventListener("DOMContentLoaded", () => {
   Analytics.init();
