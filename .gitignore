@@ -1,0 +1,95 @@
+# =====================================================================
+# API Sentinel - Comprehensive Git Ignore Rules
+# =====================================================================
+
+# 1. Byte-compiled / optimized / DLL files
+__pycache__/
+**/__pycache__/**
+*.py[cod]
+*$py.class
+*.so
+*.pyd
+
+# 2. Distribution / Packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 3. Virtual Environments & Secrets (NEVER COMMIT!)
+.env
+.env.local
+.env.*.local
+.venv
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# 4. Database & SQLite Instance (NEVER COMMIT LOCAL DATABASES!)
+instance/
+instance/*
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 5. Unit test / Coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+.pytest_cache/**
+cover/
+
+# 6. Logs & Temporary Scratch Files
+*.log
+*.tmp
+*.bak
+pip-log.txt
+pip-delete-this-directory.txt
+
+# 7. Operating System & Editor artifacts
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 8. AI Agent / Local Sandbox Artifacts
+.antigravity/
+.gemini/

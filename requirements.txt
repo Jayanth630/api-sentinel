@@ -1,0 +1,22 @@
+# =====================================================================
+# API Sentinel - Production & Development Python Dependencies
+# =====================================================================
+
+# Core Web Framework
+Flask>=3.0.0
+
+# Database & ORM
+Flask-SQLAlchemy>=3.1.1
+SQLAlchemy>=2.0.25
+
+# HTTP Client for Real Probing & Monitoring
+requests>=2.31.0
+
+# Environment Variable Management
+python-dotenv>=1.0.1
+
+# Production WSGI Server (Linux / Render / Heroku / Container deployment)
+gunicorn>=21.2.0; sys_platform != "win32"
+
+# Automated Unit & Integration Testing
+pytest>=8.0.0

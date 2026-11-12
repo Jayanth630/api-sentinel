@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: api-sentinel
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app --config gunicorn.conf.py
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALLOW_LOCAL_MONITORING
+        value: "false"
+      - key: ENABLE_BACKGROUND_SCHEDULER
+        value: "true"
+      - key: SCHEDULER_INTERVAL_SECONDS
+        value: "15"
