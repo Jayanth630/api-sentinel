@@ -15,8 +15,13 @@ const App = {
     this.initGlobalEvents();
     this.initDemoSeeder();
 
-    // Initial load
-    this.loadCurrentView();
+    // Initial load with URL hash support
+    const initialHash = (window.location.hash || "").replace("#", "").toLowerCase();
+    if (initialHash && ["dashboard", "endpoints", "analytics", "incidents", "settings"].includes(initialHash)) {
+      this.switchView(initialHash);
+    } else {
+      this.loadCurrentView();
+    }
   },
 
   /* -------------------------------------------------------------
@@ -66,9 +71,9 @@ const App = {
     const navLinks = document.querySelectorAll(".sidebar-nav .nav-link");
     navLinks.forEach(link => {
       link.addEventListener("click", (e) => {
-        e.preventDefault();
         const targetView = link.getAttribute("data-view");
         if (targetView) {
+          e.preventDefault();
           this.switchView(targetView);
         }
       });
@@ -95,6 +100,9 @@ const App = {
 
   switchView(viewName) {
     this.currentView = viewName;
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, null, "#" + viewName);
+    }
 
     // Update active nav link
     document.querySelectorAll(".sidebar-nav .nav-link").forEach(link => {

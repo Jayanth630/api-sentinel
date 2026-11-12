@@ -204,3 +204,26 @@ def test_toggle_pause_resolves_active_incidents(client, app):
     db.session.refresh(inc)
     assert inc.is_active is False
     assert "Monitoring paused" in inc.error_message
+
+def test_welcome_page_route(client):
+    """Ensure GET / serves the professional Welcome / Landing Page."""
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.get_data(as_text=True)
+    assert "API SENTINEL" in html
+    assert "Start Live Demo" in html
+    assert "Real-Time API Health Monitoring" in html
+    assert "Network Error &" in html
+    assert "HTTP 5xx &" in html
+    assert "High-Resolution Latency Analytics" in html
+    assert "Automated Incident Management" in html
+
+def test_dashboard_routes(client):
+    """Ensure GET /dashboard and GET /app serve the main Dashboard SPA interface."""
+    for path in ["/dashboard", "/app"]:
+      res = client.get(path)
+      assert res.status_code == 200
+      html = res.get_data(as_text=True)
+      assert "Dashboard Overview" in html or "kpiTotalApis" in html
+      assert "navDashboard" in html
+      assert "analyticsEndpointSelect" in html

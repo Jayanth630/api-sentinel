@@ -4,7 +4,17 @@ web_bp = Blueprint("web", __name__)
 
 @web_bp.route("/")
 def index():
-    """Render the main API Sentinel application interface."""
+    """Render the professional API Sentinel Welcome / Landing Page."""
+    return render_template(
+        "landing.html",
+        app_name="API Sentinel",
+        version="1.0.0"
+    )
+
+@web_bp.route("/dashboard")
+@web_bp.route("/app")
+def dashboard():
+    """Render the main API Sentinel application dashboard interface."""
     return render_template(
         "index.html",
         app_name="API Sentinel",

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Sentinel – Enterprise API Monitoring & Health Analytics Platform</title>
+  <meta name="description" content="API Sentinel: Monitor. Detect. Protect. Production-quality REST API monitoring, uptime analytics, network failure detection, and incident management with real HTTP telemetry.">
+  
+  <!-- Dedicated Self-Contained SaaS Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}">
+</head>
+<body class="landing-body">
+  <!-- Subtle Animated Background Elements -->
+  <div class="landing-bg-animation" aria-hidden="true">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+    <div class="bg-orb bg-orb-3"></div>
+    <div class="bg-grid-overlay"></div>
+  </div>
+
+  <!-- ============================================================= -->
+  <!-- 1. CLEAN NAVIGATION BAR                                       -->
+  <!-- ============================================================= -->
+  <header class="landing-nav">
+    <div class="landing-nav-container">
+      <!-- Brand Logo -->
+      <a href="/" class="landing-brand">
+        <div class="landing-brand-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <span class="landing-brand-text">API SENTINEL</span>
+      </a>
+
+      <!-- Clean Center Navigation Links -->
+      <nav class="landing-nav-links">
+        <a href="#features" class="nav-item">Features</a>
+        <a href="#architecture" class="nav-item">Architecture</a>
+        <a href="/dashboard#settings" class="nav-item">Docs</a>
+      </nav>
+
+      <!-- Nav Action Buttons -->
+      <div class="landing-nav-actions">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" id="landingThemeToggle" title="Toggle Light/Dark Theme" aria-label="Toggle theme">
+          <svg class="theme-moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg class="theme-sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+
+        <!-- Start Demo CTA -->
+        <a href="/dashboard" class="btn-nav-demo">
+          <span>Start Demo</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================= -->
+  <!-- 2. FULL-WIDTH CENTERED HERO SECTION                           -->
+  <!-- ============================================================= -->
+  <section class="landing-hero-section">
+    <div class="hero-container">
+      <!-- Live Probe Engine Pill -->
+      <div class="hero-status-pill">
+        <span class="pulse-green-dot"></span>
+        <span>Real-Time HTTP Probes &bull; Production Telemetry Engine</span>
+      </div>
+
+      <!-- Large API SENTINEL Title -->
+      <h1 class="hero-brand-title">API SENTINEL</h1>
+
+      <!-- Tagline: Monitor. Detect. Protect. -->
+      <div class="hero-tagline-wrap">
+        <span class="hero-tagline">Monitor. Detect. Protect.</span>
+      </div>
+
+      <!-- Short Description of the API Monitoring Platform -->
+      <p class="hero-description">
+        A high-precision REST API monitoring and health analytics platform built with Python, Flask, and SQLite. Dispatch actual HTTP network requests with microsecond precision, track genuine uptime, detect connection drops and HTTP 5xx errors instantly, and analyze latency trends before your users are impacted.
+      </p>
+
+      <!-- Prominent Centered Start Live Demo Button -->
+      <div class="hero-cta-wrapper">
+        <a href="/dashboard" class="btn-hero-primary" id="btnHeroStartLiveDemo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Start Live Demo</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+        <div class="hero-cta-subtext">
+          <span>Instant Access</span>
+          <span class="dot-separator">&bull;</span>
+          <span>Preloaded Test APIs</span>
+          <span class="dot-separator">&bull;</span>
+          <span>Zero Configuration</span>
+        </div>
+      </div>
+
+      <!-- Centered Live Telemetry Ticker Strip -->
+      <div class="hero-telemetry-strip">
+        <div class="telemetry-item">
+          <span class="telemetry-label">System Uptime</span>
+          <span class="telemetry-value text-green" id="heroKpiUptime">75.7%</span>
+          <span class="telemetry-sub">Real check calculations</span>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Avg Response Time</span>
+          <span class="telemetry-value" id="heroKpiAvg">830 ms</span>
+          <span class="telemetry-sub">Microsecond precision</span>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Monitored Endpoints</span>
+          <span class="telemetry-value" id="heroKpiTotal">6</span>
+          <span class="telemetry-sub">Active HTTP targets</span>
+        </div>
+        <div class="telemetry-divider"></div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Active Incidents</span>
+          <span class="telemetry-value text-red" id="heroKpiIncidents">3</span>
+          <span class="telemetry-sub">Auto-diagnosed outages</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- 3. FIVE EVENLY SPACED FEATURE CARDS                           -->
+  <!-- ============================================================= -->
+  <section class="features-section" id="features">
+    <div class="features-container">
+      <div class="section-header-centered">
+        <span class="section-tag-badge">Core Capabilities</span>
+        <h2 class="section-main-heading">Engineered for Total API Reliability</h2>
+        <p class="section-main-desc">
+          Five dedicated monitoring layers working together to keep your REST endpoints responsive, resilient, and fully observable.
+        </p>
+      </div>
+
+      <!-- Five Evenly Spaced Feature Cards Grid -->
+      <div class="features-five-grid">
+        <!-- Feature Card 1: Real-Time API Health Monitoring -->
+        <div class="feature-card">
+          <div class="card-glow-bar"></div>
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Real-Time API Health Monitoring</h3>
+          <p class="card-desc">
+            Dispatches actual network requests on configurable schedules (10s to 1h) with sub-millisecond precision. Supports full HTTP method parity (GET, POST, PUT, DELETE, PATCH, HEAD), custom headers, and bearer tokens.
+          </p>
+          <div class="card-tags">
+            <span class="feature-tag">HTTP Methods</span>
+            <span class="feature-tag">Custom Headers</span>
+            <span class="feature-tag">Parallel Sweeps</span>
+          </div>
+        </div>
+
+        <!-- Feature Card 2: Network Error & Connection Detection -->
+        <div class="feature-card" id="error-detection">
+          <div class="card-glow-bar"></div>
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Network Error &amp; Connection Detection</h3>
+          <p class="card-desc">
+            Deep network failure classification isolates DNS lookup drops (NXDOMAIN), SSL/TLS certificate verification failures, TCP connection refusals, and socket timeouts before HTTP status codes are even returned.
+          </p>
+          <div class="card-tags">
+            <span class="feature-tag">DNS Dropouts</span>
+            <span class="feature-tag">SSL Verification</span>
+            <span class="feature-tag">Socket Timeouts</span>
+          </div>
+        </div>
+
+        <!-- Feature Card 3: HTTP 5xx & Status Code Intelligence -->
+        <div class="feature-card">
+          <div class="card-glow-bar"></div>
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <h3 class="card-title">HTTP 5xx &amp; Status Code Intelligence</h3>
+          <p class="card-desc">
+            Instantly catches server crashes and gateway faults (500, 502, 503, 504). Validates against expected status codes, categorizes status distributions (2xx/3xx/4xx/5xx), and extracts diagnostic response headers.
+          </p>
+          <div class="card-tags">
+            <span class="feature-tag">5xx Catching</span>
+            <span class="feature-tag">Distribution Charts</span>
+            <span class="feature-tag">Diagnostic Logs</span>
+          </div>
+        </div>
+
+        <!-- Feature Card 4: High-Resolution Latency Analytics -->
+        <div class="feature-card" id="analytics">
+          <div class="card-glow-bar"></div>
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/>
+              <path d="m19 9-5 5-4-4-3 3"/>
+            </svg>
+          </div>
+          <h3 class="card-title">High-Resolution Latency Analytics</h3>
+          <p class="card-desc">
+            Measures response times with Python's microsecond <code>time.perf_counter()</code>. Computes Min, Max, Average, and true P95 percentiles over 1h, 24h, 7d, and 30d timeframes with interactive Chart.js graphs.
+          </p>
+          <div class="card-tags">
+            <span class="feature-tag">P95 Percentiles</span>
+            <span class="feature-tag">Timeline Graphs</span>
+            <span class="feature-tag">Performance Benchmarks</span>
+          </div>
+        </div>
+
+        <!-- Feature Card 5: Automated Incident Management -->
+        <div class="feature-card" id="incidents">
+          <div class="card-glow-bar"></div>
+          <div class="feature-icon-box">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="12 8 12 12 14 14"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Automated Incident Management</h3>
+          <p class="card-desc">
+            Instant incident creation upon consecutive probe failures with root-cause logging. Features second-precision outage duration tracking, automatic resolution on service recovery, and CSV post-mortem exports.
+          </p>
+          <div class="card-tags">
+            <span class="feature-tag">Auto-Resolution</span>
+            <span class="feature-tag">Second Precision</span>
+            <span class="feature-tag">CSV Audit Exports</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- 4. SYSTEM ARCHITECTURE & ENGINE PIPELINE                      -->
+  <!-- ============================================================= -->
+  <section class="landing-arch-section" id="architecture">
+    <div class="arch-container">
+      <div class="section-header-centered">
+        <span class="section-tag-badge">Engine Architecture</span>
+        <h2 class="section-main-heading">High-Throughput Full-Stack Engine</h2>
+        <p class="section-main-desc">
+          Built with lightweight, battle-tested Python and modern Web Standards with zero heavy framework overhead.
+        </p>
+      </div>
+
+      <div class="arch-pipeline-grid">
+        <div class="arch-card">
+          <div class="arch-icon">🌐</div>
+          <div class="arch-title">Client SPA</div>
+          <div class="arch-detail">Vanilla ES6+, Chart.js 4.4, CSS variables, Dark &amp; Light themes with 10s dynamic auto-refresh.</div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">⚡</div>
+          <div class="arch-title">Flask 3.x Factory</div>
+          <div class="arch-detail">REST API Blueprints, SSRF pre-flight validation, and sanitized JSON telemetry handlers.</div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">🔍</div>
+          <div class="arch-title">Monitor Daemon</div>
+          <div class="arch-detail">Multi-threaded scheduler executing real HTTP probes with microsecond time.perf_counter() precision.</div>
+        </div>
+        <div class="arch-card">
+          <div class="arch-icon">💾</div>
+          <div class="arch-title">SQLAlchemy / SQLite</div>
+          <div class="arch-detail">Relational ACID storage with PRAGMA foreign_keys=ON; for cascade integrity and zero orphaned logs.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- 5. FINAL CALL TO ACTION BANNER                                -->
+  <!-- ============================================================= -->
+  <section class="landing-cta-section">
+    <div class="cta-centered-container">
+      <h2 class="cta-heading">Ready to Monitor Your APIs?</h2>
+      <p class="cta-desc">
+        Explore the live interactive dashboard right now. It comes pre-loaded with verified public test endpoints so you can evaluate real latency telemetry immediately.
+      </p>
+      <div class="cta-action-wrap">
+        <a href="/dashboard" class="btn-hero-primary cta-btn-large">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Launch Live Demo Console</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================= -->
+  <!-- 6. CLEAN FOOTER                                               -->
+  <!-- ============================================================= -->
+  <footer class="landing-footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <div class="landing-brand-icon-sm">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <span>API SENTINEL</span>
+      </div>
+
+      <div class="footer-nav">
+        <a href="/dashboard" class="footer-link">Dashboard</a>
+        <a href="/dashboard#endpoints" class="footer-link">Monitored APIs</a>
+        <a href="/dashboard#analytics" class="footer-link">Analytics</a>
+        <a href="/dashboard#incidents" class="footer-link">Incidents</a>
+        <a href="/dashboard#settings" class="footer-link">API Docs</a>
+        <a href="/health" class="footer-link" target="_blank" rel="noopener noreferrer">Health Probe</a>
+      </div>
+
+      <div class="footer-copy">
+        &copy; 2026 API Sentinel &bull; Open-source production API monitoring platform &bull; Licensed under the MIT License
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Controller Script -->
+  <script src="{{ url_for('static', filename='js/landing.js') }}"></script>
+</body>
+</html>
